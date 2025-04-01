@@ -2,7 +2,6 @@ import React from 'react';
 
 function Card({ card, onClick }) {
   const { isFlipped, isMatched, value } = card;
-  // Define classes CSS condicionalmente conforme o estado da carta
   let classes = "w-16 h-16 sm:w-20 sm:h-20 rounded-md shadow-md flex items-center justify-center text-2xl font-bold ";
   if (isFlipped || isMatched) {
     classes += "bg-white ";

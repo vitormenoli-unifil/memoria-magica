@@ -1,12 +1,25 @@
-# React + Vite
+# Memória Mágica: O Desafio Interativo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Sobre o Projeto
+Memória Mágica é um jogo interativo desenvolvido para estimular a memória e a concentração dos jogadores de todas as idades. O projeto foi criado como parte da disciplina **Introdução a Banco de Dados: SQL Básico**, ministrada pelo professor **Anderson Iwazaki** na **Unifil**.
 
-Currently, two official plugins are available:
+Desenvolvido por: **Vitor Menoli e Matheus Aguiar**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologias Utilizadas
+- **React** para a interface interativa
+- **Tailwind CSS** para estilização responsiva e moderna
+- **SQL** para armazenamento de dados e rankings
 
-## Expanding the ESLint configuration
+## Regras do Jogo
+- As cartas começam viradas para baixo.
+- O jogador vira duas cartas por rodada.
+- Se forem iguais, permanecem descobertas; caso contrário, são viradas novamente.
+- O jogo termina quando todos os pares forem encontrados.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Funcionalidades
+- Sistema de pontuação baseado no número de tentativas ou tempo decorrido.
+- Interface responsiva e personalizável.
+- Armazenamento e exibição do ranking dos jogadores.
+
+---
+**Projeto acadêmico desenvolvido para a Unifil.**

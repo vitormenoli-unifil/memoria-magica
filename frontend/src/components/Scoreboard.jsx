@@ -4,7 +4,6 @@ function Scoreboard() {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Busca o ranking de pontuações do backend quando o componente é montado
   useEffect(() => {
     async function fetchScores() {
       try {

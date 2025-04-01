@@ -1,10 +1,8 @@
-// frontend/src/App.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import Scoreboard from './components/Scoreboard';
 import Card from './components/Card';
 
 function App() {
-  // Estados do jogo
   const [cards, setCards] = useState([]);
   const [firstIndex, setFirstIndex] = useState(null);
   const [moves, setMoves] = useState(0);
@@ -19,11 +17,9 @@ function App() {
   
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
-  
-  // Conjunto de símbolos (pares) para o jogo da memória
+
   const symbols = ['🐶', '🐱', '🦊', '🐼', '🐵', '🐸', '🐰', '🦁'];
   
-  // Embaralha um array (utilizado para embaralhar as cartas)
   function shuffleArray(array) {
     const arr = array.slice();
     for (let i = arr.length - 1; i > 0; i--) {
@@ -32,16 +28,17 @@ function App() {
     }
     return arr;
   }
-  
-  // Inicializa ou reinicia o jogo
+
   function initializeGame() {
-    const deckSymbols = shuffleArray([...symbols, ...symbols]); // Duplicar e embaralhar símbolos
+    const deckSymbols = shuffleArray([...symbols, ...symbols]);
+
     const initialCards = deckSymbols.map((symbol, index) => ({
       id: index,
       value: symbol,
       isFlipped: false,
       isMatched: false
     }));
+
     setCards(initialCards);
     setFirstIndex(null);
     setMoves(0);
@@ -50,7 +47,7 @@ function App() {
     setScoreSaved(false);
     setPlayerName('');
     setTimeElapsed(0);
-    // (Re)inicia o temporizador
+
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -66,53 +63,49 @@ function App() {
   }
   
   function restartGame() {
-    // Reinicia o jogo mantendo o frontend ativo
     initializeGame();
   }
-  
-  // Limpa o timer quando o componente é desmontado
+
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
   
-  // Lógica ao clicar em uma carta
   function handleCardClick(index) {
-    if (busy || gameOver) return; // Ignora cliques se estiver comparando cartas ou jogo encerrado
+    if (busy || gameOver) return;
+
     if (firstIndex === null) {
-      // Nenhuma carta virada atualmente
       if (cards[index].isMatched || cards[index].isFlipped) return;
+
       setFirstIndex(index);
-      // Virar a primeira carta
       setCards(prevCards => 
         prevCards.map((card, i) => i === index ? { ...card, isFlipped: true } : card)
       );
+
     } else {
-      // Já há uma primeira carta virada
       if (index === firstIndex || cards[index].isMatched || cards[index].isFlipped) return;
       const firstIdx = firstIndex;
       const secondIdx = index;
-      // Virar a segunda carta
+
       setCards(prevCards => 
         prevCards.map((card, i) => i === secondIdx ? { ...card, isFlipped: true } : card)
       );
       setMoves(prev => prev + 1);
       setBusy(true);
       setFirstIndex(null);
-      // Verificar se há correspondência
+
       if (cards[firstIdx].value === cards[secondIdx].value) {
-        // As cartas formam um par
         setCards(prevCards => prevCards.map((card, i) => {
           if (i === firstIdx || i === secondIdx) {
             return { ...card, isMatched: true };
           }
           return card;
         }));
+
         setMatchedPairs(prev => {
           const newMatched = prev + 1;
           if (newMatched * 2 === cards.length) {
-            // Todas os pares encontrados – fim de jogo
             if (timerRef.current) {
               clearInterval(timerRef.current);
             }
@@ -124,7 +117,6 @@ function App() {
         });
         setBusy(false);
       } else {
-        // Não formam par: desvirar as cartas após um breve intervalo
         setTimeout(() => {
           setCards(prevCards => prevCards.map((card, i) => {
             if (i === firstIdx || i === secondIdx) {
@@ -137,8 +129,7 @@ function App() {
       }
     }
   }
-  
-  // Envia a pontuação para o backend
+
   async function handleSaveScore() {
     if (!playerName || scoreSaved) return;
     const score = calculateScore();
@@ -150,7 +141,6 @@ function App() {
       });
       if (response.ok) {
         setScoreSaved(true);
-        // Exibe o ranking após salvar
         setShowRanking(true);
       } else {
         console.error('Falha ao salvar pontuação');
@@ -159,8 +149,7 @@ function App() {
       console.error('Erro ao conectar ao servidor:', error);
     }
   }
-  
-  // Calcula a pontuação com base no tempo e movimentos (quanto menor o tempo/movimentos, maior a pontuação)
+
   function calculateScore() {
     const totalPairs = cards.length / 2;
     const timePenalty = timeElapsed * 10;
@@ -169,15 +158,13 @@ function App() {
     if (rawScore < 0) rawScore = 0;
     return Math.floor(rawScore);
   }
-  
-  // Se estiver mostrando o ranking, renderiza a tabela de pontuações
+
   if (showRanking) {
     return (
       <div className="p-4 max-w-md mx-auto">
         <h2 className="text-2xl font-bold mb-4 text-center">Ranking de Jogadores</h2>
         <Scoreboard />
         <div className="text-center mt-4">
-          {/* Botão para voltar do ranking */}
           <button onClick={() => setShowRanking(false)} className="px-4 py-2 bg-blue-500 text-white rounded">
             {gameOver ? 'Voltar' : 'Voltar ao Jogo'}
           </button>
@@ -185,12 +172,12 @@ function App() {
       </div>
     );
   }
-  
-  // Tela inicial (antes do jogo começar)
+
   if (!gameStarted) {
     return (
-      <div className="text-center p-8">
+      <div className="text-center p-8 flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-4">Memória Mágica</h1>
+        <img src="/logo.png" alt="Logo" className='mb-4' />
         <button onClick={startGame} className="px-6 py-3 bg-blue-600 text-white font-semibold rounded">
           Iniciar Jogo
         </button>
@@ -202,17 +189,14 @@ function App() {
       </div>
     );
   }
-  
-  // Interface do jogo (durante ou após o término)
+
   return (
     <div className="p-4">
-      {/* Barra superior com informações de movimentos, tempo e acesso ao ranking */}
       <div className="flex justify-between items-center mb-4">
         <div className="text-lg">Movimentos: {moves}</div>
         <div className="text-lg">Tempo: {timeElapsed}s</div>
         <button onClick={() => setShowRanking(true)} className="text-blue-600 underline">Ranking</button>
       </div>
-      {/* Grid de cartas */}
       <div className="grid grid-cols-4 gap-4 justify-center">
         {cards.map((card, index) => (
           <Card 
@@ -222,7 +206,6 @@ function App() {
           />
         ))}
       </div>
-      {/* Mensagem e opções após fim de jogo */}
       {gameOver && (
         <div className="mt-6 text-center">
           <h2 className="text-2xl font-bold mb-2">Fim de Jogo!</h2>
